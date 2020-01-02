@@ -1,5 +1,5 @@
 import React from "react";
-import SemilarMovie from "./SemilarMovie.jsx";
+// import SemilarMovie from "./SemilarMovie.jsx";
 
 const MovieInfo = (props) => {
 
@@ -32,7 +32,7 @@ const MovieInfo = (props) => {
                         <p>
                             {props.currentMovie.overview}
                         </p>
-                        <SemilarMovie/>
+                        {/* <SemilarMovie/> */}
                     </div>
                 </div>
             </div>
