@@ -1,10 +1,11 @@
 import React, { Component } from "react";
-import SemilarMovie from "./SemilarMovie.jsx";
+import SemilarButton from "./SemilarButton.jsx";
 import MovieList from "./MovieList.jsx";
 import MovieInfo from "./MovieInfo.jsx";
+import Pagination from "./Pagination.jsx";
 
 
-class Home extends Component {
+class SemilarMovie extends Component {
     constructor() {
         super()
         this.state = {
@@ -17,9 +18,9 @@ class Home extends Component {
         this.apiKey = `1d4f6fdf4545c2198450ca7bde6aa41d`
     }
 
-    handleSubmitSimilar = (e) => {
+    handleSubmitSimilar = (e, props) => {
         e.preventDefault();
-        fetch(`https://api.themoviedb.org/3/movie/{movie_id}/similar?api_key=${this.apiKey}&language=en-US&page=1`)
+        fetch(`https://api.themoviedb.org/3/movie/${props.currentMovie.id}/similar?api_key=${this.apiKey}&language=en-US&page=1`)
             .then(data => data.json())
             .then(data => {
                 console.log(data);
@@ -27,7 +28,18 @@ class Home extends Component {
             })
     }
 
+    handleChangeSimilar = (e) => {
+        this.setState({ searchTerm: e.target.value })
+    }
 
+    nextPage = (pageNumber) => {
+        fetch(`https://api.themoviedb.org/3/movie/{movie_id}/similar?api_key=${this.apiKey}&query=${this.state.searchTerm}&page=${pageNumber}`)
+            .then(data => data.json())
+            .then(data => {
+                console.log(data);
+                this.setState({ movies: [...data.results], currentPage: pageNumber })
+            })
+    }
 
     viewMovieInfo = (id) => {
         const filteredMovie = this.state.movies.filter(movie => movie.id == id)
@@ -40,20 +52,23 @@ class Home extends Component {
     }
 
     render() {
-
+        const numberPages = Math.floor(this.state.totalResults / 20);
 
         return (
 
             <div>
                 {this.state.currentMovie == null ?
                     <div>
-                        <SemilarMovie handleSubmitSimilar={this.handleSubmitSimilar}  />
+                        <SemilarButton handleSubmitSimilar={this.handleSubmitSimilar}  handleChangeSimilar={this.handleChangeSimilar}/>
                         <MovieList viewMovieInfo={this.viewMovieInfo} movies={this.state.movies} />
                     </div>
                     :
                     <MovieInfo currentMovie={this.state.currentMovie} closeMovieInfo={this.closeMovieInfo} />
                 }
 
+                {
+                    this.state.totalResults > 20 && this.state.currentMovie == null ? <Pagination pages={numberPages} nextPage={this.nextPage} currentPage={this.state.currentPage} /> : ''
+                }
             </div>
         );
     }
@@ -62,4 +77,7 @@ class Home extends Component {
 
 
 
-export default Home;
+export default SemilarMovie;
+
+
+

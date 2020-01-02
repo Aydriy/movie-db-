@@ -63,7 +63,8 @@ class Home extends Component {
                         <MovieList viewMovieInfo={this.viewMovieInfo} movies={this.state.movies} />
                     </div>
                     :
-                    <MovieInfo currentMovie={this.state.currentMovie} closeMovieInfo={this.closeMovieInfo} />
+                    <MovieInfo currentMovie={this.state.currentMovie} closeMovieInfo={this.closeMovieInfo} /> 
+                    
                 }
 
                 {
