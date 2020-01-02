@@ -1,11 +1,10 @@
 import React, { Component } from "react";
-import SearchArea from "./SearchArea.jsx";
+import SemilarMovie from "./SemilarMovie.jsx";
 import MovieList from "./MovieList.jsx";
-import Pagination from "./Pagination.jsx";
 import MovieInfo from "./MovieInfo.jsx";
 
 
-class PageMovie extends Component {
+class Home extends Component {
     constructor() {
         super()
         this.state = {
@@ -18,9 +17,9 @@ class PageMovie extends Component {
         this.apiKey = `1d4f6fdf4545c2198450ca7bde6aa41d`
     }
 
-    handleSubmit = (e) => {
+    handleSubmitSimilar = (e) => {
         e.preventDefault();
-        fetch(`https://api.themoviedb.org/3/search/movie?api_key=${this.apiKey}&query=${this.state.searchTerm}`)
+        fetch(`https://api.themoviedb.org/3/movie/{movie_id}/similar?api_key=${this.apiKey}&language=en-US&page=1`)
             .then(data => data.json())
             .then(data => {
                 console.log(data);
@@ -28,18 +27,7 @@ class PageMovie extends Component {
             })
     }
 
-    handleChange = (e) => {
-        this.setState({ searchTerm: e.target.value })
-    }
 
-    nextPage = (pageNumber) => {
-        fetch(`https://api.themoviedb.org/3/search/movie?api_key=${this.apiKey}&query=${this.state.searchTerm}&page=${pageNumber}`)
-            .then(data => data.json())
-            .then(data => {
-                console.log(data);
-                this.setState({ movies: [...data.results], currentPage: pageNumber })
-            })
-    }
 
     viewMovieInfo = (id) => {
         const filteredMovie = this.state.movies.filter(movie => movie.id == id)
@@ -52,23 +40,20 @@ class PageMovie extends Component {
     }
 
     render() {
-        const numberPages = Math.floor(this.state.totalResults / 20);
+
 
         return (
 
             <div>
                 {this.state.currentMovie == null ?
                     <div>
-                        <SearchArea handleSubmit={this.handleSubmit} handleChange={this.handleChange} />
+                        <SemilarMovie handleSubmitSimilar={this.handleSubmitSimilar}  />
                         <MovieList viewMovieInfo={this.viewMovieInfo} movies={this.state.movies} />
                     </div>
                     :
                     <MovieInfo currentMovie={this.state.currentMovie} closeMovieInfo={this.closeMovieInfo} />
                 }
 
-                {
-                    this.state.totalResults > 20 && this.state.currentMovie == null ? <Pagination pages={numberPages} nextPage={this.nextPage} currentPage={this.state.currentPage} /> : ''
-                }
             </div>
         );
     }
@@ -77,4 +62,4 @@ class PageMovie extends Component {
 
 
 
-export default PageMovie;
+export default Home;

@@ -35,13 +35,15 @@ class Routes extends Component {
     return (
 
       <Router>
+        <div className="flex-wrapper">
+          <Header />
+            
+          <Route exact path="/home" component={Home} handleSubmit={this.handleSubmit} handleChange={this.handleChange} />
+          <Route path="/oneMoviePage" component={PageMovie} />
 
-        <Header />
-        
-        <Route exact path="/home" component={Home} handleSubmit={this.handleSubmit} handleChange={this.handleChange}/>
-        <Route path="/oneMoviePage" component={PageMovie} />
-        
-        <Footer />
+          <Footer />
+        </div>
+
 
       </Router>
     );
